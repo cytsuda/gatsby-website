@@ -1,29 +1,49 @@
-import * as React from "react"
-import { Link } from "gatsby"
-import { StaticImage } from "gatsby-plugin-image"
+import * as React from "react";
+import styled from "styled-components";
 
-import Layout from "../components/layout"
-import SEO from "../components/seo"
+// Custom components
+import Social from "../components/social";
+import Menu from "../components/menu";
+import Layout from "../components/layout/layout";
 
-const IndexPage = () => (
-  <Layout>
-    <SEO title="Home" />
-    <h1>Hi people</h1>
-    <p>Welcome to your new Gatsby site.</p>
-    <p>Now go build something great.</p>
-    <StaticImage
-      src="../images/gatsby-astronaut.png"
-      width={300}
-      quality={95}
-      formats={["AUTO", "WEBP", "AVIF"]}
-      alt="A Gatsby astronaut"
-      style={{ marginBottom: `1.45rem` }}
-    />
-    <p>
-      <Link to="/page-2/">Go to page 2</Link> <br />
-      <Link to="/using-typescript/">Go to "Using TypeScript"</Link>
-    </p>
-  </Layout>
-)
+import SEO from "../components/seo";
 
-export default IndexPage
+const Title = styled.h1`
+  font-size: 48px;
+  font-weight: 700;
+  color: #ddd;
+  @media (max-width: 576px) {
+    font-size: 40px;
+  }
+`;
+
+const Subtitle = styled.p`
+  font-size: 24px;
+  margin-top: 8px;
+  margin-bottom: 32px;
+  color: #ddd;
+  & .span {
+    border-bottom: 2px solid #1bb385;
+  }
+  @media (max-width: 576px) {
+    font-size: 20px;
+    line-height: 2;
+  }
+`;
+
+const IndexPage = () => {
+  return (
+    <Layout type="home">
+      <SEO title="Home" />
+      <Title>Carlos Yoshio Tsuda</Title>
+      <Subtitle>
+        Desenvolvedor <span className="span">Fullstack Javascript</span> other
+        busy word
+      </Subtitle>
+      <Menu type="home" />
+      <Social />
+    </Layout>
+  );
+};
+
+export default IndexPage;
