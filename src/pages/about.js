@@ -1,4 +1,5 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
+import ReactTextTransition, { presets } from "react-text-transition";
 import styled from "styled-components";
 import { StaticImage } from "gatsby-plugin-image";
 import { Link } from "gatsby";
@@ -51,36 +52,43 @@ const WrapImage = ({ className }) => {
 const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  row-gap: ${props =>
+  row-gap: ${(props) =>
     props.rowGap ? props.rowGap : props.gridGap ? props.gridGap : 0}px;
-  column-gap: ${props =>
+  column-gap: ${(props) =>
     props.columnGap ? props.columnGap : props.gridGap ? props.gridGap : 0}px;
 
-  ${props => (props.margin ? `margin: ${props.margin}px;` : `margin: 16px 0;`)}
-  ${props =>
+  ${(props) =>
+    props.margin ? `margin: ${props.margin}px;` : `margin: 16px 0;`}
+  ${(props) =>
     props.marginY &&
     `margin-top: ${props.marginY}px; margin-bottom: ${props.marginY}px;`}
-  ${props =>
+  ${(props) =>
     props.marginX &&
     `margin-right: ${props.marginX}px; margin-left: ${props.marginX}px;`}
-  ${props => props.marginTop && `margin-top: ${props.marginTop}px;`}
-  ${props => props.marginBottom && `margin-bottom:  ${props.marginBottom}px;`}
-  ${props => props.marginRight && `margin-right:   ${props.marginRight}px;`}
-  ${props => props.marginLeft && `margin-left:    ${props.marginLeft}px;`}
-
+  ${(props) => props.marginTop && `margin-top: ${props.marginTop}px;`}
+  ${(props) => props.marginBottom && `margin-bottom:  ${props.marginBottom}px;`}
+  ${(props) => props.marginRight && `margin-right:   ${props.marginRight}px;`}
+  ${(props) => props.marginLeft && `margin-left:    ${props.marginLeft}px;`}
+  ${(props) => props.hidden && `display: none; opacity: 0;`}
   @media (max-width: 992px) {
     flex-wrap: wrap;
+  }
+  @media (max-width: 414px) {
+    grid-template-columns: 1fr;
   }
 `;
 
 const InfoImage = styled(WrapImage)`
-  grid-column: 1 / span 4;
+  grid-column: 1 / span 5;
   @media (max-width: 992px) {
     grid-column: 1 / -1;
   }
+  @media (max-width: 414px) {
+    width: 100%;
+  }
 `;
 const InfoText = styled.div`
-  grid-column: 5 / -1;
+  grid-column: 6 / -1;
   @media (max-width: 992px) {
     grid-column: 1 / -1;
   }
@@ -119,10 +127,10 @@ const ListItemStyle = styled.li`
   }
 `;
 
-const ListItem = props => {
+const ListItem = (props) => {
   return (
     <ListItemStyle>
-      <RiArrowRightSLine style={{color: "#66ebba"}}/>
+      <RiArrowRightSLine style={{ color: "#66ebba" }} />
       {props.children}
     </ListItemStyle>
   );
@@ -183,16 +191,16 @@ const SkillContainer = styled.div`
   align-items: center;
 
   border: 2px solid
-    ${props =>
+    ${(props) =>
       props.type === "int" ? "transparent" : "rgba(20, 179, 133, 0.1)"};
   border-bottom: 2px solid
-    ${props =>
+    ${(props) =>
       props.type === "int" ? "transparent" : "rgba(20, 179, 133, 0.5)"};
   border-right: 2px solid
-    ${props =>
+    ${(props) =>
       props.type === "int" ? "transparent" : "rgba(20, 179, 133, 0.5)"};
   border-radius: 3px;
-  ${props =>
+  ${(props) =>
     props.type === "int"
       ? `
           background: #2c3644;
@@ -208,12 +216,12 @@ const SkillContainer = styled.div`
           );
         `}
   background-size: 300%;
-  color: ${props => (props.color ? props.color : "#1bb385")};
-  padding: ${props => (props.direction ? "16px 32px" : "24px 0")};
-  grid-column: ${props => (props.span ? `span ${props.span};` : `span 3`)};
-  flex-direction: ${props => (props.direction ? props.direction : "column")};
-  grid-gap: ${props => (props.direction ? 10 : 0)}px;
-  font-size: ${props => (props.direction ? 24 : 36)}px;
+  color: ${(props) => (props.color ? props.color : "#1bb385")};
+  padding: ${(props) => (props.direction ? "16px 32px" : "24px 0")};
+  grid-column: ${(props) => (props.span ? `span ${props.span};` : `span 3`)};
+  flex-direction: ${(props) => (props.direction ? props.direction : "column")};
+  grid-gap: ${(props) => (props.direction ? 10 : 0)}px;
+  font-size: ${(props) => (props.direction ? 24 : 36)}px;
   transition: all 0.2s ease-in-out;
   &:hover {
     background-position: 100%;
@@ -221,17 +229,17 @@ const SkillContainer = styled.div`
   & span {
     font-size: 16px;
     font-family: "Open Sans", sans-serif;
-    ${props => props.type === "int" && "font-weight: 700;"}
+    ${(props) => props.type === "int" && "font-weight: 700;"}
     color: white;
   }
   @media (max-width: 992px) {
-    ${props => props.spanLg && `grid-column: span ${props.spanLg}`}
+    ${(props) => props.spanLg && `grid-column: span ${props.spanLg}`}
   }
   @media (max-width: 768px) {
-    ${props => props.spanMd && `grid-column: span ${props.spanMd}`}
+    ${(props) => props.spanMd && `grid-column: span ${props.spanMd}`}
   }
   @media (max-width: 576px) {
-    ${props => props.spanSm && `grid-column: span ${props.spanSm}`}
+    ${(props) => props.spanSm && `grid-column: span ${props.spanSm}`}
   }
 `;
 
@@ -244,21 +252,62 @@ const WrapLink = ({ className, children, to }) => (
 const Button = styled(WrapLink)`
   cursor: pointer;
   padding: 12px 16px 10px;
-  border: 1px solid ${props => (props.primary ? "#2ecc71" : "#2c3644")};
-  color: ${props => (props.primary ? "#2ecc71" : "#fff")};
+  border: 1px solid ${(props) => (props.primary ? "#2ecc71" : "#2c3644")};
+  color: ${(props) => (props.primary ? "#2ecc71" : "#fff")};
   border-radius: 2px;
   font-weight: 700;
   font-size: 16px;
   letter-spacing: 1px;
-  background-color: ${props =>
+  background-color: ${(props) =>
     props.primary ? "transparent" : `${rgba("#2c3644", 0.4)}`};
   text-decoration: none;
   transition: background 0.2s ease-in-out;
   &:hover {
-    background-color: ${props =>
+    background-color: ${(props) =>
       props.primary ? `${rgba("#000", 0.1)}` : `${rgba("#2c3644", 0.8)}`};
   }
 `;
+
+const QuoteContainer = styled.div`
+  margin: 64px auto;
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  & span {
+    text-align: right;
+    color: #444;
+    &:before {
+      content: "- ";
+    }
+  }
+  @media (max-width: 576px) {
+    width: 90%;
+  }
+`;
+
+const QuotePhrase = styled.div`
+  min-height: 70px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  @media (max-width: 576px) {
+    min-height: 110px;
+  }
+`;
+
+const Quote = ({ text, translate, autor }) => {
+  const [trans, setTrans] = useState(false);
+  return (
+    <QuoteContainer>
+      <QuotePhrase onClick={() => setTrans((prev) => !prev)}>
+        <ReactTextTransition
+          text={trans ? translate : text}
+          springConfig={presets.gentle}
+        />
+      </QuotePhrase>
+      <span>{autor}</span>
+    </QuoteContainer>
+  );
+};
 
 const IndexPage = () => (
   <Layout type="about" title="Sobre" text="Saiba um pouco mais sobre mim">
@@ -266,48 +315,50 @@ const IndexPage = () => (
     <Container gridGap={16}>
       <InfoImage />
       <InfoText>
-        <SubTitle>Javascript Developer</SubTitle>
+        <SubTitle>Desenvolvedor Javascript</SubTitle>
         <Phrase>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
+          Eu sou um desenvolvedor Javascript e aficionado por UI/UX e design em
+          geral. Utilizo Node.js server-side e React como controlador de
+          interface.
         </Phrase>
         <List>
           <ListItem>
             <span>Site:</span> tsuda.space
           </ListItem>
           <ListItem>
-            <span>Telefone:</span> 17 323133837
+            <span>Cidade:</span> 17 323133837
           </ListItem>
           <ListItem>
             <span>Cidade:</span> São José do Rio Preto, SP
           </ListItem>
           <ListItem>
-            <span>Nothing here:</span> tsuda.space
+            <span>Dribbble:</span> tsuda.space
           </ListItem>
           <ListItem>
-            <span>Website:</span> tsuda.space
+            <span>Behance:</span> tsuda.space
           </ListItem>
           <ListItem>
-            <span>Website:</span> tsuda.space
-          </ListItem>
-          <ListItem>
-            <span>Website:</span> tsuda.space
-          </ListItem>
-          <ListItem>
-            <span>Website:</span> tsuda.space
+            <span>Linkedin:</span> tsuda.space
           </ListItem>
         </List>
         <Phrase>
-          Sed ac nulla eleifend, dapibus neque sagittis, vehicula metus. Sed
-          velit tellus, maximus et sollicitudin sit amet, varius sed nulla.
-          Morbi lorem ipsum, pretium ut arcu nec, interdum sagittis odio.
-          Aliquam ut pellentesque lacus. Cras sed pretium ex. Ut efficitur
-          mauris vel aliquet egestas. Nunc molestie purus fermentum, pharetra
-          felis id, sagittis mi.
+          Identificar, pesquisar, resolver e implementar são o conjunto de
+          habilidades que um desenvolvedor possue. A linguagem que ele utiliza é
+          apenas uma ferramenta e, como todas ferramentas, ela possui aplicações
+          especificas. Node.js permite utilizar Javascript para qualquer tipo de
+          aplicação computacional.
         </Phrase>
       </InfoText>
     </Container>
-    <Container marginY={64} gridGap={16}>
+    <Quote
+      autor="Andrew Hunt"
+      text='"In some ways, programming is like painting. You start with a blank canvas
+      and certain basic raw materials. You use a combination of science, art,
+      and craft to determine what to do with them."'
+      translate='"De certa forma, programar é como pintar. Você começa com uma tela em branco e com certos materiais brutos.
+      Você utiliza uma combinação de ciência, arte e talento para determinar o que fazer com eles."'
+    />
+    <Container hidden marginY={64} gridGap={16}>
       <Square>
         <Circle>
           <FaRegSmileBeam />
@@ -338,7 +389,7 @@ const IndexPage = () => (
       </Square>
     </Container>
     <SectionTitle title="Habilidades" />
-    <Container gridGap={8} marginBottom={64}>
+    <Container gridGap={16} marginBottom={64}>
       <SkillContainer spanSm={6}>
         <FaHtml5 />
         <span>HTML5</span>
@@ -452,7 +503,7 @@ const IndexPage = () => (
         direction="row"
       >
         <GiCakeSlice />
-        <span>Mentiras</span>
+        <span>The cake is a lie?</span>
       </SkillContainer>
       <SkillContainer
         type="int"
@@ -466,8 +517,8 @@ const IndexPage = () => (
       </SkillContainer>
     </Container>
     <Container gridGap={16} marginBottom={16}>
-      <Button to="/portfolio">Portfólio</Button>
-      <Button primary to="/contato">
+      <Button to="/portifolio/">Portfólio</Button>
+      <Button primary to="/contact/">
         Contato
       </Button>
     </Container>

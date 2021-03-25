@@ -1,7 +1,14 @@
-/**
- * Implement Gatsby's Node APIs in this file.
- *
- * See: https://www.gatsbyjs.com/docs/node-apis/
- */
+// exports.createSchemaCustomization = ({ actions }) => {
+//   const { createTypes } = actions
 
-// You can delete this file if you're not using it
+//   createTypes(`
+//     type Mdx implements Node {
+//       frontmatter: MdxFrontmatter!
+//     }
+//     type MdxFrontmatter {
+//       photoOne: File @fileByRelativePath
+//       photoTwo: File @fileByRelativePath
+//       photoThree: File @fileByRelativePath
+//     }
+//   `)
+// }

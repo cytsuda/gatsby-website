@@ -20,9 +20,18 @@ const TextWrapper = styled.div`
     margin-left: 8px;
     flex: 1;
   }
+  @media (max-width: 992px) {
+    max-width: 30%;
+  }
+  @media (max-width: 768px) {
+    max-width: 50%;
+  }
+  @media (max-width: 576px) {
+    max-width: 70%;
+  }
 `;
 
-const SectionTitle = props => {
+const SectionTitle = (props) => {
   const { title } = props;
   return (
     <TextWrapper>

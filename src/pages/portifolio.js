@@ -1,16 +1,13 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { StaticImage } from "gatsby-plugin-image";
+import { graphql } from "gatsby";
+import { GatsbyImage, getImage } from "gatsby-plugin-image";
 
 import { rgba } from "polished";
 
 import { RiZoomInLine } from "@react-icons/all-files/ri/RiZoomInLine";
 import { RiGithubFill } from "@react-icons/all-files/ri/RiGithubFill";
 import { RiLinksFill } from "@react-icons/all-files/ri/RiLinksFill";
-
-// RiFileSearchLine - detail
-// RiGithubFill - github
-// RiLinkM - live link
 
 // Custom Component
 import SEO from "../components/seo";
@@ -21,6 +18,9 @@ const TagWrapper = styled.ul`
   grid-gap: 8px;
   margin: 0 auto;
   list-style: none;
+  @media (max-width: 576px) {
+    flex-wrap: wrap;
+  }
 `;
 
 const Item = styled.li`
@@ -30,7 +30,7 @@ const Item = styled.li`
   color: #e7eefb;
   border-radius: 2px;
   cursor: pointer;
-  ${props => props.active && "background: #1BB385;"}
+  ${(props) => props.active && "background: #1BB385;"}
 `;
 
 const Main = styled.div`
@@ -38,6 +38,19 @@ const Main = styled.div`
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 32px;
   margin-top: 32px;
+
+  @media (max-width: 992px) {
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 24px;
+  }
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 24px;
+  }
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+    grid-gap: 16px;
+  }
 `;
 
 const ImageContainer = styled.div`
@@ -89,6 +102,9 @@ const ImageHover = styled.div`
   & h4 {
     font-weight: 700;
   }
+  & span {
+    text-transform: uppercase;
+  }
   ${ImageContainer}:hover & {
     opacity: 1;
     transform: none;
@@ -100,9 +116,23 @@ const IconContainer = styled.div`
   grid-gap: 16px;
   margin: 0 auto;
 `;
-const WrapIcon = ({ className, Icon, url }) => <Icon className={className} />;
 
-const IconLink = styled(WrapIcon)`
+const NiceLink = styled.a`
+  text-decoration: none;
+  line-height: 0;
+  outline: none;
+`;
+
+const WrapIcon = ({ className, Icon, url = "", blank = false, link = false }) =>
+  link ? (
+    <NiceLink href={url} target={blank ? "_blank" : "_self"}>
+      <Icon className={className} />
+    </NiceLink>
+  ) : (
+    <Icon className={className} />
+  );
+
+const IconItem = styled(WrapIcon)`
   color: #fff;
   font-size: 42px;
   padding: 8px;
@@ -116,26 +146,33 @@ const IconLink = styled(WrapIcon)`
   }
 `;
 
-const ImageWrapper = ({ src, alt, title, tag }) => {
+const ImageWrapper = ({ data }) => {
+  console.log("ImageWrapper");
+  const { title, live, github, category, featuredImage } = data;
+  const image = getImage(featuredImage);
+  console.log(data.title);
+  console.log(data);
   return (
     <ImageContainer>
       <ImageHover>
         <h4>{title}</h4>
-        <span>{tag}</span>
+        <span>{category}</span>
         <IconContainer>
-          <IconLink Icon={RiZoomInLine} />
-          <IconLink Icon={RiGithubFill} />
-          <IconLink Icon={RiLinksFill} />
+          <IconItem Icon={RiZoomInLine} />
+          <IconItem Icon={RiGithubFill} link blank url={github} />
+          <IconItem Icon={RiLinksFill} link blank url={live} />
         </IconContainer>
       </ImageHover>
-      <img src={src} alt={alt} />
+      <GatsbyImage image={image} alt={title} />
     </ImageContainer>
   );
 };
 
 const opt = ["All", "Python", "React", "Gatsby", "HTML/CSS"];
-const Portfolio = () => {
+const Portfolio = ({ data }) => {
   const [select, setSelect] = useState("all");
+  const portfolio = data.allMdx.edges;
+  console.log(portfolio);
 
   return (
     <Layout type="portifolio" title="Portifólio" text="Portfólio">
@@ -152,63 +189,45 @@ const Portfolio = () => {
         ))}
       </TagWrapper>
       <Main>
-        <ImageWrapper
-          src="https://picsum.photos/400/300?random=1"
-          alt="testing"
-          title="Something 1"
-          tag="Python"
-        />
-        <ImageWrapper
-          src="https://picsum.photos/400/300?random=2"
-          alt="testing"
-          title="Something  2"
-          tag="React"
-        />
-        <ImageWrapper
-          src="https://picsum.photos/400/300?random=3"
-          alt="testing"
-          title="Something 3"
-          tag="Gatsby"
-        />
-        <ImageWrapper
-          src="https://picsum.photos/400/300?random=4"
-          alt="testing"
-          title="Something 4"
-          tag="HTML/CSS"
-        />
-        <ImageWrapper
-          src="https://picsum.photos/400/300?random=5"
-          alt="testing"
-          title="Something 5"
-          tag="Python"
-        />
-        <ImageWrapper
-          src="https://picsum.photos/400/300?random=6"
-          alt="testing"
-          title="Something 6"
-          tag="React"
-        />
-        <ImageWrapper
-          src="https://picsum.photos/400/300?random=7"
-          alt="testing"
-          title="Something 7"
-          tag="React"
-        />
-        <ImageWrapper
-          src="https://picsum.photos/400/300?random=8"
-          alt="testing"
-          title="Something 68"
-          tag="HTML/CSS"
-        />
-        <ImageWrapper
-          src="https://picsum.photos/400/300?random=9"
-          alt="testing"
-          title="Something 9"
-          tag="Gatsby"
-        />
+        {portfolio.map((item) => (
+          <ImageWrapper key={item.node.id} data={item.node.frontmatter} />
+        ))}
       </Main>
     </Layout>
   );
 };
 
+export const pageQuery = graphql`
+  query {
+    allMdx {
+      edges {
+        node {
+          id
+          frontmatter {
+            title
+            live
+            github
+            date
+            category
+            description
+            featuredImage {
+              childImageSharp {
+                gatsbyImageData(
+                  placeholder: BLURRED
+                  formats: [AUTO, WEBP, AVIF]
+                )
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
 export default Portfolio;
+
+/*
+
+separar "IMAGEWRAPPER" do portfolio e utilizar slug pra configuraçoes basicas
+
+*/

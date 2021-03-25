@@ -57,18 +57,19 @@ const Container = styled.div`
   justify-content: center;
   padding-top: 90px;
   padding-bottom: 0;
-  ${props => (props.type === "home" ? "padding: 100px" : "padding: 68px")};
+  ${(props) =>
+    props.type === "home" ? "padding: 100px" : "padding: 68px 68px 34px;"};
   @media (max-width: 1400px) {
     padding-right: 60px;
     padding-left: 60px;
     border-left: 8px solid #1bb385;
   }
   @media (max-width: 992px) {
-    padding-right: 64px;
-    padding-left: 64px;
+    padding-right: 32px;
+    padding-left: 32px;
   }
   @media (max-width: 768px) {
-    padding: 32px 40px 0 32px;
+    padding: 16px 40px 16px 32px;
     align-items: center;
   }
   @media (max-width: 576px) {
@@ -76,18 +77,24 @@ const Container = styled.div`
     align-items: start;
     border-left: 4px solid #1bb385;
   }
+  @media (max-width: 414px) {
+    padding: 0 12px;
+  }
 `;
 
 const Main = styled.main`
   display: flex;
   flex-direction: column;
   margin-top: 24px;
-  ${props => props.type === "home" && "margin: auto 0;"}
+  ${(props) => props.type === "home" && "margin: auto 0;"}
   &.default {
     background-color: rgba(14, 17, 22, 0.95);
     color: #e7eefb;
     padding: 32px;
     border-radius: 2px;
+    @media(max-width: 414px){
+      padding: 24px;
+    }
   }
 `;
 
@@ -96,6 +103,12 @@ const Title = styled.h1`
   font-weight: 700;
   text-transform: uppercase;
   margin-bottom: 24px;
+  @media (max-width: 768px) {
+    font-size: 24px;
+  }
+  @media (max-width: 414px){
+    font-size: 18px;
+  }
 `;
 
 const LayoutComponent = ({ children, type, title, text }) => {

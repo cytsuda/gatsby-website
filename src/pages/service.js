@@ -13,6 +13,12 @@ const Main = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 16px;
+  @media (max-width: 992px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const Box = styled.div`
@@ -32,7 +38,7 @@ const Box = styled.div`
   grid-gap: 16px;
   transition: all 0.4s ease-in-out;
   cursor: pointer;
-  background-size: 400%;
+  background-size: 500%;
   background-position: right;
   &:hover {
     transform: translate(8px, -8px);

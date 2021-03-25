@@ -8,14 +8,27 @@ import SEO from "../components/seo";
 const Main = styled.div`
   display: flex;
   grid-gap: 16px;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
-
+/*
+  @media (max-width: 992px) {
+    ${(props) => props.spanLg && `grid-column: span ${props.spanLg}`}
+  }
+  @media (max-width: 768px) {
+    ${(props) => props.spanMd && `grid-column: span ${props.spanMd}`}
+  }
+  @media (max-width: 576px) {
+    ${(props) => props.spanSm && `grid-column: span ${props.spanSm}`}
+  }
+*/
 const Section = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 32px;
   margin-right: 16px;
-  ${props => props.order && `order: ${props.orders}`}
+  ${(props) => props.order && `order: ${props.orders}`}
 `;
 
 const Title = styled.h3`
