@@ -2,11 +2,11 @@ import * as React from "react";
 import styled from "styled-components";
 
 // Custom components
-import Social from "../components/social";
-import Menu from "../components/menu";
-import Layout from "../components/layout/layout";
+import Social from "@components/social";
+import Menu from "@components/menu";
+import Layout from "@components/layout/layout";
 
-import SEO from "../components/seo";
+import SEO from "@components/seo";
 
 const Title = styled.h1`
   font-size: 48px;

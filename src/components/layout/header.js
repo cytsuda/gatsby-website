@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Link } from "gatsby";
 
 // Custom component
-import Menu from "../menu";
+import Menu from "@components/menu";
 
 const Header = styled.header`
   position: fixed;

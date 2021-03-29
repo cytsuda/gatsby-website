@@ -2,8 +2,8 @@ import React from "react";
 import styled from "styled-components";
 
 // Custom Component
-import Layout from "../components/layout/layout";
-import SEO from "../components/seo";
+import Layout from "@components/layout/layout";
+import SEO from "@components/seo";
 
 const Main = styled.div`
   display: flex;
@@ -12,17 +12,7 @@ const Main = styled.div`
     flex-direction: column;
   }
 `;
-/*
-  @media (max-width: 992px) {
-    ${(props) => props.spanLg && `grid-column: span ${props.spanLg}`}
-  }
-  @media (max-width: 768px) {
-    ${(props) => props.spanMd && `grid-column: span ${props.spanMd}`}
-  }
-  @media (max-width: 576px) {
-    ${(props) => props.spanSm && `grid-column: span ${props.spanSm}`}
-  }
-*/
+
 const Section = styled.div`
   display: flex;
   flex-direction: column;

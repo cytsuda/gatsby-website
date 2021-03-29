@@ -7,14 +7,16 @@ import { MdShare } from "@react-icons/all-files/md/MdShare";
 import { MdPhoneInTalk } from "@react-icons/all-files/md/MdPhoneInTalk";
 
 // Custom Component
-import SEO from "../components/seo";
-import Layout from "../components/layout/layout";
-import Social from "../components/social";
+import SEO from "@components/seo";
+import Layout from "@components/layout/layout";
+import Social from "@components/social";
+import Form from "@components/form";
 
 const BoxContainer = styled.div`
   display: grid;
   grid-gap: 20px;
   grid-template-columns: repeat(2, 1fr);
+  ${(props) => props.marginBottom && `margin-bottom: ${props.marginBottom}px;`}
 `;
 
 const Box = styled.div`
@@ -24,6 +26,7 @@ const Box = styled.div`
   align-items: center;
   display: flex;
   border-radius: 3px;
+  grid-column: ${(props) => (props.full ? "1 / -1" : "auto")};
 `;
 
 const WrapIcon = ({ className, Icon }) => <Icon className={className} />;
@@ -60,7 +63,7 @@ const TextInfo = styled.p``;
 const Portfolio = () => (
   <Layout type="contact" title="Contatos" text="Contate me mdf">
     <SEO title="Contatos" />
-    <BoxContainer>
+    <BoxContainer marginBottom={24}>
       <Box>
         <IconBox icon={MdPlace} />
         <TextBox>
@@ -72,8 +75,8 @@ const Portfolio = () => (
         <IconBox icon={MdShare} />
         <TextBox>
           <TextTitle>Medias Sociais</TextTitle>
-          <Social marginTop={0} transparent/>
-        </TextBox> 
+          <Social gap={0} marginTop={0} transparent />
+        </TextBox>
       </Box>
       <Box>
         <IconBox icon={MdMail} />
@@ -90,7 +93,33 @@ const Portfolio = () => (
         </TextBox>
       </Box>
     </BoxContainer>
+    <BoxContainer>
+      <Box full>
+        <Form data={formArray} btnMsg="Enviar" />
+      </Box>
+    </BoxContainer>
   </Layout>
 );
 
+const formArray = [
+  {
+    type: "text",
+    name: "nome",
+    label: "Nome",
+    placeholder: "Seu nome.",
+  },
+  {
+    type: "email",
+    name: "email",
+    label: "Email",
+    placeholder: "Seu email.",
+  },
+  {
+    type: "textarea",
+    rows: 5,
+    name: "mensagem",
+    label: "Mensagem",
+    placeholder: "Escreva aqui sua mensagem.",
+  },
+];
 export default Portfolio;

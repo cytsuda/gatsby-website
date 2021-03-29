@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 // Icons
-import { FaFacebookF } from "@react-icons/all-files/fa/FaFacebookF";
 import { FaTwitter } from "@react-icons/all-files/fa/FaTwitter";
 import { FaGithub } from "@react-icons/all-files/fa/FaGithub";
 import { FaBehance } from "@react-icons/all-files/fa/FaBehance";
@@ -44,8 +43,6 @@ const CustomIcon = styled(WrapIcon)`
 `;
 
 const SocialList = ({ marginTop = 32, gap = 16, transparent = false }) => {
-  console.log("Social List");
-  console.log(marginTop);
   return (
     <List marginTop={marginTop} gap={gap} transparent={transparent}>
       <ListItem
@@ -76,13 +73,6 @@ const SocialList = ({ marginTop = 32, gap = 16, transparent = false }) => {
       >
         <CustomIcon Icon={FaDribbble} />
       </ListItem>
-      {/* <ListItem
-        transparent={transparent}
-        href="https://www.behance.net/cytsuda"
-        target="_blank"
-      >
-        <CustomIcon Icon={FaFacebookF} />
-      </ListItem> */}
       <ListItem
         transparent={transparent}
         href="https://www.linkedin.com/in/cytsuda/"

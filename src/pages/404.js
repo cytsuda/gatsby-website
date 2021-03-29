@@ -1,11 +1,9 @@
 import * as React from "react";
 
-import Layout from "../components/layout/layout";
-import SEO from "../components/seo";
+import Layout from "@components/layout/layout";
+import SEO from "@components/seo";
 
 const NotFoundPage = (props) => {
-  console.log("NotFoundPage");
-  console.log(props);
   const { location } = props;
   return (
     <Layout type="404" title="Error 404" text="Error 404: Página não encontrada.">

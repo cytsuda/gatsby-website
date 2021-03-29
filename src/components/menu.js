@@ -141,8 +141,8 @@ const MenuComponent = (props) => {
       <List className={clsx(open && "open", !type && "nav")}>
         <LinkItem to="/">Início</LinkItem>
         <LinkItem to="/about/">Sobre</LinkItem>
-        <LinkItem to="/curriculum/">Currículo</LinkItem>
-        <LinkItem to="/service/">Serviços</LinkItem>
+        {/* <LinkItem to="/curriculum/">Currículo</LinkItem>
+        <LinkItem to="/service/">Serviços</LinkItem> */}
         <LinkItem to="/portifolio/">Portfólio</LinkItem>
         <LinkItem to="/contact/">Contato</LinkItem>
       </List>

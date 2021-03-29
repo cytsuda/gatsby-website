@@ -9,12 +9,12 @@ import * as React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { useStaticQuery, graphql } from "gatsby";
-import Wave from "../../images/wave.svg";
-import Illustration from "../../images/illustration.svg";
-import "./layout.css";
+import Wave from "@images/wave.svg";
+import Illustration from "@images/illustration.svg";
+import "@components/layout/layout.css";
 
-import Header from "./header";
-import SectionTitle from "../SectionTitle";
+import Header from "@components/layout/header";
+import SectionTitle from "@components/SectionTitle";
 
 const Footer = styled.footer`
   margin-top: auto;
@@ -92,7 +92,7 @@ const Main = styled.main`
     color: #e7eefb;
     padding: 32px;
     border-radius: 2px;
-    @media(max-width: 414px){
+    @media (max-width: 414px) {
       padding: 24px;
     }
   }
@@ -106,7 +106,7 @@ const Title = styled.h1`
   @media (max-width: 768px) {
     font-size: 24px;
   }
-  @media (max-width: 414px){
+  @media (max-width: 414px) {
     font-size: 18px;
   }
 `;

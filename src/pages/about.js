@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import ReactTextTransition, { presets } from "react-text-transition";
 import styled from "styled-components";
 import { StaticImage } from "gatsby-plugin-image";
@@ -6,9 +6,9 @@ import { Link } from "gatsby";
 import { rgba } from "polished";
 
 // Custom Component
-import SEO from "../components/seo";
-import SectionTitle from "../components/SectionTitle";
-import Layout from "../components/layout/layout";
+import SEO from "@components/seo";
+import SectionTitle from "@components/SectionTitle";
+import Layout from "@components/layout/layout";
 
 // Icons
 import { FaRegSmileBeam } from "@react-icons/all-files/fa/FaRegSmileBeam";
@@ -36,7 +36,6 @@ import { FaDAndD } from "@react-icons/all-files/fa/FaDAndD";
 import { RiArrowRightSLine } from "@react-icons/all-files/ri/RiArrowRightSLine";
 
 // Image
-// import RightArContainer from "../assets/right-outlined_color.svg";
 
 const WrapImage = ({ className }) => {
   return (
@@ -298,7 +297,7 @@ const Quote = ({ text, translate, autor }) => {
   const [trans, setTrans] = useState(false);
   return (
     <QuoteContainer>
-      <QuotePhrase onClick={() => setTrans((prev) => !prev)}>
+      <QuotePhrase onMouseEnter={()=>setTrans(true)} onMouseLeave={()=>setTrans(false)}>
         <ReactTextTransition
           text={trans ? translate : text}
           springConfig={presets.gentle}

@@ -10,8 +10,8 @@ import { RiGithubFill } from "@react-icons/all-files/ri/RiGithubFill";
 import { RiLinksFill } from "@react-icons/all-files/ri/RiLinksFill";
 
 // Custom Component
-import SEO from "../components/seo";
-import Layout from "../components/layout/layout";
+import SEO from "@components/seo";
+import Layout from "@components/layout/layout";
 
 const TagWrapper = styled.ul`
   display: flex;
@@ -147,11 +147,8 @@ const IconItem = styled(WrapIcon)`
 `;
 
 const ImageWrapper = ({ data }) => {
-  console.log("ImageWrapper");
   const { title, live, github, category, featuredImage } = data;
   const image = getImage(featuredImage);
-  console.log(data.title);
-  console.log(data);
   return (
     <ImageContainer>
       <ImageHover>
@@ -172,7 +169,6 @@ const opt = ["All", "Python", "React", "Gatsby", "HTML/CSS"];
 const Portfolio = ({ data }) => {
   const [select, setSelect] = useState("all");
   const portfolio = data.allMdx.edges;
-  console.log(portfolio);
 
   return (
     <Layout type="portifolio" title="Portifólio" text="Portfólio">

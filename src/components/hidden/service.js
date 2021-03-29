@@ -6,8 +6,8 @@ import { FiDribbble } from "@react-icons/all-files/fi/FiDribbble";
 import { AiOutlineFileSearch } from "@react-icons/all-files/ai/AiOutlineFileSearch";
 
 // Custom Component
-import Layout from "../components/layout/layout";
-import SEO from "../components/seo";
+import Layout from "@components/layout/layout";
+import SEO from "@components/seo";
 
 const Main = styled.div`
   display: grid;
