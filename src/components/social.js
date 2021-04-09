@@ -1,11 +1,14 @@
 import React from "react";
 import styled from "styled-components";
+import {rgba} from "polished";
 // Icons
 import { FaTwitter } from "@react-icons/all-files/fa/FaTwitter";
 import { FaGithub } from "@react-icons/all-files/fa/FaGithub";
 import { FaBehance } from "@react-icons/all-files/fa/FaBehance";
 import { FaDribbble } from "@react-icons/all-files/fa/FaDribbble";
 import { FaLinkedinIn } from "@react-icons/all-files/fa/FaLinkedinIn";
+// Style
+import { colors, mediaQuery } from "@styles/styles";
 
 const List = styled.div`
   display: flex;
@@ -14,32 +17,30 @@ const List = styled.div`
 `;
 
 const ListItem = styled.a`
-  box-sizing: border-box;
-  width: 36px;
-  height: 36px;
   display: flex;
   justify-content: center;
   align-items: center;
+  box-sizing: border-box;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   cursor: pointer;
-  transition: all ease-in-out 0.2s;
-  color: #fff;
+  transition: all ease-in-out 0.4s;
+  color: white;
   text-decoration: none;
-  background-color: ${(props) =>
-    props.transparent ? "transparent" : "#242c37"};
+  background-color: ${(props) => props.transparent ? "transparent" : rgba(colors.black,0.5)};
   &:hover {
-    background-color: ${(props) =>
-      props.transparent ? "transparent" : "#1bb385"};
-    ${(props) => props.transparent && "color: #1bb385;"}
+    background-color: ${(props) => props.transparent ? "transparent" : colors.primary};
+    ${(props) => props.transparent && `color: ${colors.primary};`}
   }
 `;
 
 const WrapIcon = ({ className, Icon }) => {
   return <Icon className={className} />;
 };
+
 const CustomIcon = styled(WrapIcon)`
   color: inherit;
-  font-size: 16px;
 `;
 
 const SocialList = ({ marginTop = 32, gap = 16, transparent = false }) => {

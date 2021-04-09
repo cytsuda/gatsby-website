@@ -1,36 +1,56 @@
-import React, { useState } from "react";
-import styled from "styled-components";
+import React, { useState, useEffect, useRef } from "react";
+import styled, { css } from "styled-components";
 import { graphql } from "gatsby";
 import { GatsbyImage, getImage } from "gatsby-plugin-image";
 
-import { rgba } from "polished";
+import { rgba, darken } from "polished";
 
 import { RiZoomInLine } from "@react-icons/all-files/ri/RiZoomInLine";
 import { RiGithubFill } from "@react-icons/all-files/ri/RiGithubFill";
 import { RiLinksFill } from "@react-icons/all-files/ri/RiLinksFill";
+import { RiArrowDropRightLine } from "@react-icons/all-files/ri/RiArrowDropRightLine";
+import { RiArrowDropLeftLine } from "@react-icons/all-files/ri/RiArrowDropLeftLine";
 
 // Custom Component
 import SEO from "@components/seo";
 import Layout from "@components/layout/layout";
+import ModalPortifolio from "@components/modal/ModalPortfolio";
 
-const TagWrapper = styled.ul`
+// style var
+import { colors, mediaQuery } from "@styles/styles";
+
+const TagWrapper = styled.div`
+  width: 100%;
+  position: relative;
+`;
+
+const Wrapper = styled.ul`
   display: flex;
   grid-gap: 8px;
   margin: 0 auto;
   list-style: none;
-  @media (max-width: 576px) {
-    flex-wrap: wrap;
-  }
+  ${mediaQuery(
+    "xs",
+    `
+      flex-wrap: nowrap;
+      overflow: hidden;
+      width: 100%;
+      position: relative;
+      align-items: center;
+      transition: all .2s ease-in-out;
+    `
+  )}
 `;
 
 const Item = styled.li`
   font-weight: 700;
+
   padding: 8px 20px 6px;
-  background: #3a4455;
-  color: #e7eefb;
+  background: ${colors.darkGray};
+  color: ${colors.white};
   border-radius: 2px;
   cursor: pointer;
-  ${(props) => props.active && "background: #1BB385;"}
+  ${(props) => props.active && `background: ${colors.primary};`}
 `;
 
 const Main = styled.div`
@@ -38,19 +58,27 @@ const Main = styled.div`
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 32px;
   margin-top: 32px;
-
-  @media (max-width: 992px) {
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 24px;
-  }
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 24px;
-  }
-  @media (max-width: 576px) {
-    grid-template-columns: 1fr;
-    grid-gap: 16px;
-  }
+  ${mediaQuery(
+    "lg",
+    css`
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 24px;
+    `
+  )}
+  ${mediaQuery(
+    "md",
+    css`
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 24px;
+    `
+  )}
+  ${mediaQuery(
+    "sm",
+    css`
+      grid-template-columns: 1fr;
+      grid-gap: 16px;
+    `
+  )}
 `;
 
 const ImageContainer = styled.div`
@@ -69,10 +97,10 @@ const ImageHover = styled.div`
   justify-content: center;
   align-item: center;
   text-align: center;
-  grid-gap: 16px;
+  grid-gap: 8px;
   width: 100%;
   height: 100%;
-  background: ${rgba("#040506", 0.98)};
+  background: ${rgba(darken(0.2, colors.darkGray), 0.98)};
   position: absolute;
   transition: all 0.4s ease-in-out;
   transform: scale(0.9);
@@ -102,18 +130,35 @@ const ImageHover = styled.div`
   & h4 {
     font-weight: 700;
   }
-  & span {
-    text-transform: uppercase;
-  }
   ${ImageContainer}:hover & {
     opacity: 1;
     transform: none;
   }
 `;
 
+const TagContainer = styled.div`
+  text-transform: uppercase;
+  max-width: 80%;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  grid-gap: 8px;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-top: 4px;
+  & span {
+    padding: 0 8px;
+    border: 1px solid ${darken(0.5, colors.white)};
+    color: ${darken(0.5, colors.white)};
+    border-radius: 25px;
+  }
+`;
+
 const IconContainer = styled.div`
   display: flex;
-  grid-gap: 16px;
+  grid-gap: 9px;
   margin: 0 auto;
 `;
 
@@ -123,41 +168,98 @@ const NiceLink = styled.a`
   outline: none;
 `;
 
-const WrapIcon = ({ className, Icon, url = "", blank = false, link = false }) =>
-  link ? (
-    <NiceLink href={url} target={blank ? "_blank" : "_self"}>
-      <Icon className={className} />
-    </NiceLink>
-  ) : (
-    <Icon className={className} />
+const WrapIcon = (props) => {
+  const {
+    className,
+    Icon,
+    url,
+    blank = false,
+    id,
+    direction,
+    onClick,
+    hidden = false,
+  } = props;
+  if (url || id) {
+    return (
+      <NiceLink href={id ? `#${id}` : url} target={blank ? "_blank" : "_self"}>
+        <Icon className={className} />
+      </NiceLink>
+    );
+  } else {
+    return (
+      <Icon
+        className={className}
+        direction={direction}
+        onClick={onClick}
+        hidden={hidden}
+      />
+    );
+  }
+};
+const DirectionIcon = styled(WrapIcon)`
+  position: absolute;
+  height: 100%;
+  color: ${colors.white};
+  font-size: 4.2rem;
+  cursor: pointer;
+  z-index: 100;
+  display: none;
+  top: 0;
+  transition: all 0.3s ease-in-out;
+  opacity: 0;
+  visibility: hidden;
+  background: linear-gradient(
+    to ${(props) => props.direction && props.direction},
+    ${rgba(colors.black, 0)} 0%,
+    ${rgba(colors.black, 0.75)} 25%,
+    ${rgba(colors.black, 1)}
   );
+  ${(props) => props.direction && props.direction + ": 0;"}
+  &:hover {
+    color: ${colors.primary};
+  }
+  ${(props) =>
+    props.hidden &&
+    mediaQuery(
+      "xs",
+      `
+      display: inline;
+      opacity: 1;
+      visibility: visible;
+    `
+    )}
+`;
 
 const IconItem = styled(WrapIcon)`
-  color: #fff;
-  font-size: 42px;
+  color: ${colors.white};
+  font-size: 4.2rem;
   padding: 8px;
   cursor: pointer;
-  background-color: ${rgba("#fff", 0)};
+  background-color: ${rgba(colors.white, 0)};
   border-radius: 50%;
   transition: all 0.3s ease-in-out;
   &:hover {
-    color: #1bb385;
-    background-color: ${rgba("#fff", 0.1)};
+    color: ${colors.primary};
+    background-color: ${rgba(colors.white, 0.1)};
   }
 `;
 
-const ImageWrapper = ({ data }) => {
+const ImageWrapper = ({ data, id }) => {
   const { title, live, github, category, featuredImage } = data;
-  const image = getImage(featuredImage);
+  const image = getImage(featuredImage.childrenImageSharp[0]);
   return (
     <ImageContainer>
       <ImageHover>
         <h4>{title}</h4>
-        <span>{category}</span>
+        <TagContainer>
+          {category.map((cat, index) => (
+            <span key={index}>{cat}</span>
+          ))}
+        </TagContainer>
         <IconContainer>
-          <IconItem Icon={RiZoomInLine} />
-          <IconItem Icon={RiGithubFill} link blank url={github} />
-          <IconItem Icon={RiLinksFill} link blank url={live} />
+          <IconItem Icon={RiZoomInLine} id={id} />
+          <IconItem Icon={RiGithubFill} blank url={github} />
+          <IconItem Icon={RiLinksFill} blank url={live} />
         </IconContainer>
       </ImageHover>
       <GatsbyImage image={image} alt={title} />
@@ -165,30 +267,130 @@ const ImageWrapper = ({ data }) => {
   );
 };
 
-const opt = ["All", "Python", "React", "Gatsby", "HTML/CSS"];
+// const opts = ["All", "Python", "React", "Gatsby", "HTML/CSS"];
 const Portfolio = ({ data }) => {
+  const menuEl = useRef(null);
   const [select, setSelect] = useState("all");
-  const portfolio = data.allMdx.edges;
+  const [showed, setShowed] = useState([]);
+  const [options, setOptions] = useState([]);
+  const [directions, setDirections] = useState([false, true]);
+  const portifolio = data.allMdx.nodes;
+  const tags = new Set();
+
+  const handleFilterCategory = (array) => {
+    const filter = array.filter((item) => {
+      if (select.toLowerCase() === "all") {
+        return true;
+      } else {
+        return item.frontmatter.category.findIndex(
+          (category) => category.toLowerCase() === select.toLowerCase()
+        ) === -1
+          ? false
+          : true;
+      }
+    });
+    return filter;
+  };
+
+  tags.add("ALL");
+  useEffect(() => {
+    portifolio.map((element) => {
+      element.frontmatter.category.map((i) => {
+        tags.add(i);
+      });
+    });
+    setShowed(portifolio);
+    setOptions(Array.from(tags));
+  }, []);
+
+  useEffect(() => {
+    setShowed(handleFilterCategory(portifolio));
+  }, [select]);
+
+  const handleScroll = (direction) => {
+    const ref = menuEl.current ? menuEl.current : null;
+    const effectArea = ref.clientWidth - 84;
+    if (direction === "right") {
+      const compRight = ref.scrollLeftMax - ref.scrollLeft - effectArea >= 0;
+      setDirections([true, compRight ? true : false]);
+
+      if (compRight) {
+        for (let i = 0; i < 12; i ++) {
+          setTimeout(() => {
+            menuEl.current.scrollLeft += effectArea / 12;
+          }, i*16);
+        }
+      } else {
+        for (let i = 0; i < (ref.scrollLeftMax - ref.scrollLeft)/(effectArea/12); i++) {
+          setTimeout(() => {
+            if (menuEl.current.scrollLeft + effectArea / 12 < menuEl.current.scrollLeftMax) {
+              menuEl.current.scrollLeft += effectArea / 12;
+            } else {
+              menuEl.current.scrollLeft = menuEl.current.scrollLeftMax;
+            }
+          }, i*16);
+        }
+      }
+    } else {
+      const compLeft = ref.scrollLeft - effectArea >= 0;
+      setDirections([compLeft ? true : false, true]);
+      
+      if (compLeft) {
+        for (let i = 0; i < 12; i ++) {
+          setTimeout(() => {
+            menuEl.current.scrollLeft -= effectArea / 12;
+          }, i*16);
+        }
+      } else {
+        for (let i = 0; i < (ref.scrollLeft / (effectArea / 12)); i++){
+          setTimeout(() => {
+            if (menuEl.current.scrollLeft - effectArea / 12 > 0) {
+              menuEl.current.scrollLeft -= effectArea / 12;
+            } else {
+              menuEl.current.scrollLeft = 0;
+            }
+          }, i * 16);
+        }
+      }
+    }
+  };
 
   return (
     <Layout type="portifolio" title="Portifólio" text="Portfólio">
       <SEO title="Portfólio" />
       <TagWrapper>
-        {opt.map((item, index) => (
-          <Item
-            key={index}
-            onClick={() => setSelect(item.toLowerCase())}
-            active={select === item.toLowerCase()}
-          >
-            {item}
-          </Item>
-        ))}
+        <DirectionIcon
+          Icon={RiArrowDropLeftLine}
+          direction={"left"}
+          onClick={() => handleScroll("left")}
+          hidden={directions[0]}
+        />
+        <Wrapper ref={menuEl}>
+          {options.map((item, index) => (
+            <Item
+              key={index}
+              onClick={() => setSelect(item.toLowerCase())}
+              active={select === item.toLowerCase()}
+            >
+              {item}
+            </Item>
+          ))}
+        </Wrapper>
+        <DirectionIcon
+          Icon={RiArrowDropRightLine}
+          direction={"right"}
+          onClick={() => handleScroll("right")}
+          hidden={directions[1]}
+        />
       </TagWrapper>
       <Main>
-        {portfolio.map((item) => (
-          <ImageWrapper key={item.node.id} data={item.node.frontmatter} />
+        {showed.map((item, index) => (
+          <ImageWrapper key={item.id} id={item.id} data={item.frontmatter} />
         ))}
       </Main>
+      {portifolio.map((item, index) => (
+        <ModalPortifolio key={item.id} id={item.id} data={item.frontmatter} />
+      ))}
     </Layout>
   );
 };
@@ -196,34 +398,37 @@ const Portfolio = ({ data }) => {
 export const pageQuery = graphql`
   query {
     allMdx {
-      edges {
-        node {
-          id
-          frontmatter {
-            title
-            live
-            github
-            date
-            category
-            description
-            featuredImage {
-              childImageSharp {
-                gatsbyImageData(
-                  placeholder: BLURRED
-                  formats: [AUTO, WEBP, AVIF]
-                )
-              }
+      nodes {
+        frontmatter {
+          photos {
+            childrenImageSharp {
+              gatsbyImageData(placeholder: BLURRED, formats: [AUTO, WEBP, AVIF])
+            }
+            id
+          }
+          category
+          date
+          description
+          featuredImage {
+            childrenImageSharp {
+              gatsbyImageData(placeholder: BLURRED, formats: [AUTO, WEBP, AVIF])
             }
           }
+          live
+          github
+          title
+          subtitle
         }
+        id
       }
     }
   }
 `;
+
 export default Portfolio;
-
 /*
-
-separar "IMAGEWRAPPER" do portfolio e utilizar slug pra configuraçoes basicas
+scrollIntoView({
+  behavior: "smooth",
+})
 
 */

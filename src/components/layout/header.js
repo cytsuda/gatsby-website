@@ -1,10 +1,13 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+import { rgba } from "polished";
 import { Link } from "gatsby";
 
 // Custom component
 import Menu from "@components/menu";
+
+import { colors, mediaQuery } from "@styles/styles";
 
 const Header = styled.header`
   position: fixed;
@@ -12,37 +15,57 @@ const Header = styled.header`
   left: 0;
   width: 100%;
   margin-bottom: 24px;
-  background-color: rgba(14, 17, 22, 0.9);
-  border-bottom: 1px solid rgba(27, 179, 133, 0.5);
-  box-shadow: 0 0 5px rgba(27, 179, 133, 0.5);
-  z-index: 100000000;
-  @media (max-width: 1400px) {
-    left: 8px;
-    width: calc(100% - 8px);
-  }
+  background-color: ${rgba(colors.black, 0.9)};
+  border-bottom: 1px solid ${rgba(colors.primary, 0.2)};
+  box-shadow: 0 0 5px ${rgba(colors.primary, 0.2)};
+  z-index: 999;
+
+  ${mediaQuery(
+    "xxl",
+    css`
+      left: 4px;
+      width: calc(100% - 4px);
+    `
+  )}
+
 `;
 
 const Nav = styled.div`
-  max-width: 1400px;
+  max-width: 1600px;
+  padding: 0 100px;
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   align-items: center;
-  @media (max-width: 1400px) {
-    padding: 0 60px;
-  }
+
+  ${mediaQuery(
+    "xxl",
+    css`
+      max-width: 1400px;
+      padding: 0 92px;
+    `
+  )}
+  ${mediaQuery(
+    "lg",
+    css`
+      padding: 0 64px;
+    `
+  )}
 `;
 
 const Title = styled.h1`
   margin: 0;
 
-  @media (max-width: 768px) {
-    display: none;
-  }
+  ${mediaQuery(
+    "md",
+    css`
+      display: none;
+    `
+  )}
 `;
 
-const styles = { color: "white", textDecoration: "none" };
+const styles = { color: colors.white, textDecoration: "none" };
 
 const HeaderLayout = ({ siteTitle }) => (
   <Header>

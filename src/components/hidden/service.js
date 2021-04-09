@@ -13,21 +13,21 @@ const Main = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 16px;
-  @media (max-width: 992px) {
+  ${mediaQuery("lg", css`
     grid-template-columns: repeat(2, 1fr);
-  }
-  @media (max-width: 768px) {
+  `)}
+  ${mediaQuery("md", css`
     grid-template-columns: 1fr;
-  }
+  `)}
 `;
 
 const Box = styled.div`
   background: linear-gradient(
     45deg,
-    #007d53 0%,
-    #1bb385 33%,
-    #3a4455 66%,
-    #3a4455 100%
+    ${colors.darkPrimary} 0%,
+    ${color.primary} 33%,
+    ${colors.darkGray} 66%,
+    ${colors.darkGray} 100%
   );
   padding: 64px;
   border-radius: 5px;
@@ -42,7 +42,7 @@ const Box = styled.div`
   background-position: right;
   &:hover {
     transform: translate(8px, -8px);
-    box-shadow: -8px 8px 0px ${rgba("#3a4455", 1)};
+    box-shadow: -8px 8px 0px ${rgba(colors.darkGray, .6)};
     background-position: left;
   }
 `;
@@ -55,29 +55,29 @@ const BoxIcon = styled.div`
   align-items: center;
   font-size: 32px;
   border-radius: 5px;
-  box-shadow: -8px -8px #4f5c73;
+  box-shadow: -8px -8px ${colors.darkGray};
   transition: all 0.3s ease-in-out 0.05s;
   background: linear-gradient(
     225deg,
-    #3a4455 0%,
-    #3a4455 50%,
-    #1bb385 50%,
-    #1bb385 100%
+    ${colors.darkGray} 0%,
+    ${colors.darkGray} 50%,
+    ${colors.primary} 50%,
+    ${colors.primary} 100%
   );
   background-size: 300%;
   background-position: bottom left;
 
   ${Box}:hover & {
-    color: #1bb385;
+    color: ${color.primary};
     background-position: top right;
-    box-shadow: 0px 0px #4f5c73;
+    box-shadow: 0px 0px ${colors.darkGray};
   }
 `;
 
 const BoxTitle = styled.h4`
   transition: all 0.3s ease-in-out 0.05s;
   ${Box}:hover & {
-    color: #3a4455;
+    color: ${colors.darkGray};
   }
 `;
 

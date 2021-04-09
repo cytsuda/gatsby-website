@@ -1,22 +1,24 @@
 import React, { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
-import { rgba } from "polished";
+import { rgba, darken } from "polished";
 import produce from "immer";
 
 // Custom
 import validateEmail from "@utils/validateEmail";
-
-//  - green
-const colorGreen = "#1BB385";
-// #d0463c - red
-const colorRed = "#d0463c";
-const colorNeutra = "#b3bccb";
+// Styled Var
+import { colors, mediaQuery, fontFamily } from "@styles/styles";
 
 const Form = styled.form`
   width: 100%;
   display: flex;
   flex-direction: column;
   grid-gap: 24px;
+  ${mediaQuery(
+    "sm",
+    css`
+      grid-gap: 16px;
+    `
+  )}
 `;
 
 const InputContainer = styled.div`
@@ -28,60 +30,75 @@ const InputContainer = styled.div`
 const ErrorText = styled.span`
   position: absolute;
   bottom: -16px;
+  font-size: 1.2rem;
   left: 0;
-  font-size: 12px;
-  color: ${colorRed};
+  color: ${colors.danger};
   font-weight: 700;
+  font-style: italic;
 `;
+
 const Label = styled.label`
-  font-size: 12px;
+  font-size: 1.2rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #b3bccb;
-  font-family: "Poppins", sans-serif;
+  color: ${colors.gray};
+  font-family: ${fontFamily.poppins};
   transition: all 0.4s ease-in-out;
   cursor: pointer;
 `;
-// ${(props) => props.isValid && props.isTouch}
-// ${(props) => props.isValid ? "#1bb385" : props.isTouch ? "#e74c3c" : "white"}
+
 const baseInputStyle = css`
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: ${rgba(colors.white, .1)};
   border: none;
-  font-size: 16px;
   padding: 8px 12px;
   transition: all 0.2s ease-in-out;
   outline: none;
   box-shadow: none;
   color: ${(props) =>
-    props.isTouch ? (props.isValid ? colorGreen : colorRed) : "white"};
-  border: 1px solid rgba(255, 255, 255, 0.1);
+    props.isTouch
+      ? props.isValid
+        ? colors.primary
+        : colors.danger
+      : colors.white};
+  border: 1px solid
+    ${(props) =>
+      props.isTouch
+        ? props.isValid
+          ? rgba(colors.primary, 0.25)
+          : rgba(colors.danger, 0.75)
+        : "rgba(255, 255, 255, 0.1)"};
   &:focus,
   &:active {
     box-shadow: ${(props) =>
       props.isTouch && !props.isValid
-        ? `inset 0px 0px 4px ${rgba(colorRed, 1)}`
-        : `inset 0px 0px 4px ${rgba(colorGreen, 1)}`};
+        ? `inset 0px 0px 4px ${rgba(colors.danger, 1)}`
+        : `inset 0px 0px 4px ${rgba(colors.primary, 1)}`};
     border: ${(props) =>
       props.isTouch
         ? props.isValid
-          ? `1px solid ${colorGreen}`
-          : `1px solid ${colorRed}`
-        : "1px solid rgba(255, 255, 255, 0.1)"};
+          ? `1px solid ${colors.primary}`
+          : `1px solid ${colors.danger}`
+        : `1px solid ${colors.primary}`};
   }
   & + ${Label} {
     color: ${(props) =>
-      props.isTouch ? (props.isValid ? colorGreen : colorRed) : colorNeutra};
+      props.isTouch
+        ? props.isValid
+          ? colors.primary
+          : colors.danger
+        : colors.gray};
   }
   &:active + ${Label}, &:hover + ${Label}, &:focus + ${Label} {
     color: ${(props) =>
-      props.isTouch && !props.isValid ? colorRed : colorGreen};
+      props.isTouch && !props.isValid ? colors.danger : colors.primary};
   }
 `;
 
 const Input = styled.input`
   ${baseInputStyle}
 `;
+
 const TextArea = styled.textarea`
   ${baseInputStyle}
   resize: none;
@@ -93,35 +110,52 @@ const Button = styled.button`
   cursor: pointer;
   border-radius: 2px;
   border: none;
-  font-size: 16px;
   font-weight: 700;
+  outline: none;
   transition: all 0.2s ease-in-out;
-  box-shadow: -2px 2px 4px rgba(0, 0, 0, 0.25);
-  color: ${(props) => (props.type === "reset" ? "#1bb385" : "white")};
+  box-shadow: -2px 2px 4px ${rgba(colors.black, .25)};
+  color: ${(props) => (props.type === "reset" ? colors.primary : colors.white)};
   background-color: ${(props) =>
-    props.type === "reset" ? "transparent" : "#1bb385"};
-  border: 2px solid #1bb385;
+    props.type === "reset" ? "transparent" : colors.primary};
+  border: 1px solid ${colors.primary};
+
   &:hover {
     transform: translate(1px, -1px);
-    box-shadow: -3px 3px 4px rgba(0, 0, 0, 0.5);
+    box-shadow: -3px 3px 4px ${rgba(colors.black, .5)};
   }
   &:active {
     transform: translate(-1px, 1px);
-    box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.25);
+    box-shadow: 0px 0px 1px ${rgba(colors.black, .25)};
   }
   &:disabled {
-    background-color: #777;
-    color: #aaa;
+    background-color: ${(props) =>
+      props.type === "reset" ? "transparent" : `${darken(0.65, colors.white)}`};
+    color: ${darken(0.5, colors.white)};
     cursor: default;
     border-color: transparent;
     transform: translate(-1px, 1px);
-    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.5);
+    border-color: ${(props) =>
+      props.type !== "reset" ? "transparent" : `${darken(0.65, colors.white)}`};
+    box-shadow: ${(props) =>
+      props.type === "reset"
+        ? "none"
+        : `0px 0px 4px ${rgba(colors.black, 0.25)}`};
   }
+  ${mediaQuery("xxs", css`
+    align-self: unset;
+  `)}
 `;
 const ButtonsBox = styled.div`
   display: flex;
-  grid-gap: 16px;
+  grid-gap: 1.6rem;
   justify-content: flex-end;
+  
+  ${mediaQuery("sm", css`
+    flex-direction: row-reverse;
+  `)}
+  ${mediaQuery("xxs", css`
+    flex-direction: column-reverse;
+  `)}
 `;
 
 const formStructure = (info) => {
@@ -223,7 +257,11 @@ const FormComponent = (props) => {
             </InputContainer>
           ))}
           <ButtonsBox>
-              <Button type="reset" onClick={handleReset} disabled={dataForm.findIndex(i=>i.value.length>0)===-1}>
+            <Button
+              type="reset"
+              onClick={handleReset}
+              disabled={dataForm.findIndex((i) => i.value.length > 0) === -1}
+            >
               Limpar
             </Button>
             <Button onClick={submitHandler} disabled={!validForm}>

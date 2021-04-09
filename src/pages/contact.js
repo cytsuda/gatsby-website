@@ -1,5 +1,6 @@
 import * as React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+import { lighten, rgba } from "polished";
 
 import { MdPlace } from "@react-icons/all-files/md/MdPlace";
 import { MdMail } from "@react-icons/all-files/md/MdMail";
@@ -12,28 +13,50 @@ import Layout from "@components/layout/layout";
 import Social from "@components/social";
 import Form from "@components/form";
 
+// styles var
+import { colors, mediaQuery, textFont, fontFamily } from "@styles/styles";
+
 const BoxContainer = styled.div`
   display: grid;
   grid-gap: 20px;
   grid-template-columns: repeat(2, 1fr);
   ${(props) => props.marginBottom && `margin-bottom: ${props.marginBottom}px;`}
+  ${mediaQuery(
+    "md",
+    css`
+      display: flex;
+      flex-direction: column;
+    `
+  )}
 `;
 
 const Box = styled.div`
-  background-color: #2c3644;
+  background-color: ${rgba(colors.darkGray, 0.9)};
   padding: 24px;
   grid-gap: 16px;
   align-items: center;
   display: flex;
   border-radius: 3px;
   grid-column: ${(props) => (props.full ? "1 / -1" : "auto")};
+  ${mediaQuery(
+    "xs",
+    css`
+      padding: 16px;
+    `
+  )}
+  ${mediaQuery(
+    "xxs",
+    css`
+      flex-direction: column;
+    `
+  )}
 `;
 
 const WrapIcon = ({ className, Icon }) => <Icon className={className} />;
 
 const Icon = styled(WrapIcon)`
-  color: #1bb385;
-  font-size: 24px;
+  color: ${colors.primary};
+  font-size: 2.4rem;
 `;
 
 const IconCont = styled.div`
@@ -44,7 +67,11 @@ const IconCont = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #515f76;
+  background-color: ${lighten(0.05, colors.darkGray)};
+  ${mediaQuery("xs", css`
+    height: 48px;
+    width: 48px;
+  `)}
 `;
 
 const IconBox = ({ icon }) => (
@@ -53,15 +80,19 @@ const IconBox = ({ icon }) => (
   </IconCont>
 );
 
-const TextBox = styled.div``;
+const TextBox = styled.div`
+  ${mediaQuery("xxs", css`
+    text-align: center;
+  `)}
+`;
 const TextTitle = styled.h4`
-  font-size: 24px;
-  color: #515f76;
+  font-size: 2.4rem;
+  color: ${lighten(0.3, colors.darkGray)};
 `;
 const TextInfo = styled.p``;
 
 const Portfolio = () => (
-  <Layout type="contact" title="Contatos" text="Contate me mdf">
+  <Layout type="contact" title="Contatos" text="contate-me por esses meios">
     <SEO title="Contatos" />
     <BoxContainer marginBottom={24}>
       <Box>

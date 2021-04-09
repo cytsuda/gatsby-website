@@ -5,12 +5,15 @@ import styled from "styled-components";
 import Layout from "@components/layout/layout";
 import SEO from "@components/seo";
 
+// Style Var
+import { colors, mediaQuery } from "@styles/styles";
+
 const Main = styled.div`
   display: flex;
   grid-gap: 16px;
-  @media (max-width: 768px) {
+  ${mediaQuery("md", css`
     flex-direction: column;
-  }
+  `)}
 `;
 
 const Section = styled.div`
@@ -37,7 +40,7 @@ const Group = styled.div`
     top: 0;
     left: -24px;
     content: "";
-    background-color: #2c3644;
+    background-color: ${colors.darkGray};
     width: 2px;
     height: 100%;
   }
@@ -49,13 +52,13 @@ const Group = styled.div`
     height: 18px;
     width: 18px;
     border-radius: 50%;
-    background-color: #1bb385;
+    background-color: ${colors.primary};
     z-index: 2;
   }
 `;
 
 const GroupTitle = styled.h4`
-  color: #1bb385;
+  color: ${colors.primary};
   font-size: 18px;
   font-weight: 600;
   text-transform: uppercase;
@@ -64,7 +67,7 @@ const GroupTitle = styled.h4`
 `;
 
 const Tag = styled.p`
-  background-color: #3a4455;
+  background-color: ${colors.darkGray};
   align-self: flex-start;
   padding: 8px 16px 6px;
   border-radius: 2px;

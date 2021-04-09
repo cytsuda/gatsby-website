@@ -1,9 +1,13 @@
 import React from "react";
-import styled from "styled-components";
+import styled, {css} from "styled-components";
+import {rgba} from "polished";
+
+// Style Var
+import { colors, mediaQuery } from "@styles/styles";
 
 const TextWrapper = styled.div`
   max-width: 25%;
-  color: #3a4455;
+  color: ${rgba(colors.darkGray,.75)};
   text-transform: uppercase;
   position: relative;
   display: flex;
@@ -16,19 +20,19 @@ const TextWrapper = styled.div`
   }
   & span {
     height: 1px;
-    background-color: #1bb385;
+    background-color: ${colors.primary};
     margin-left: 8px;
     flex: 1;
   }
-  @media (max-width: 992px) {
+  ${mediaQuery("lg", css`
     max-width: 30%;
-  }
-  @media (max-width: 768px) {
+  `)}
+  ${mediaQuery("md", css`
     max-width: 50%;
-  }
-  @media (max-width: 576px) {
+  `)}
+  ${mediaQuery("sm", css`
     max-width: 70%;
-  }
+  `)}
 `;
 
 const SectionTitle = (props) => {

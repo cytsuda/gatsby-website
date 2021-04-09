@@ -1,34 +1,30 @@
 import * as React from "react";
-import styled from "styled-components";
+import { lighten } from "polished";
+import styled, {css} from "styled-components";
 
 // Custom components
 import Social from "@components/social";
 import Menu from "@components/menu";
 import Layout from "@components/layout/layout";
-
 import SEO from "@components/seo";
 
+import { textFont, fontFamily, colors, mediaQuery } from "@styles/styles";
+
 const Title = styled.h1`
-  font-size: 48px;
-  font-weight: 700;
-  color: #ddd;
-  @media (max-width: 576px) {
-    font-size: 40px;
-  }
+  ${textFont(fontFamily.poppins, "4.8rem", 700, colors.lightGray)}
 `;
 
 const Subtitle = styled.p`
-  font-size: 24px;
-  margin-top: 8px;
-  margin-bottom: 32px;
-  color: #ddd;
+  ${textFont(fontFamily.poppins, "2.4rem", 200, lighten(.9,colors.lightGray))}
+
+  margin-top: 12px;
+  margin-bottom: 56px;
   & .span {
-    border-bottom: 2px solid #1bb385;
+    border-bottom: 2px solid ${lighten(.2,colors.primary)};
   }
-  @media (max-width: 576px) {
-    font-size: 20px;
+  ${mediaQuery("sm", css`
     line-height: 2;
-  }
+  `)}
 `;
 
 const IndexPage = () => {

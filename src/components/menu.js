@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import clsx from "clsx";
 import { Link } from "gatsby";
-import styled from "styled-components";
+import styled, {css} from "styled-components";
+import { lighten, rgba } from "polished";
+
+// Style Var
+import { colors, mediaQuery } from "@styles/styles";
 
 const List = styled.ul`
   display: flex;
@@ -10,27 +14,30 @@ const List = styled.ul`
   &.nav {
     padding: 24px 0px;
   }
-  @media (max-width: 768px) {
-    position: fixed;
-    width: 90%;
-    height: 80vh;
-    background-color: rgba(36, 44, 55, 0.98);
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    top: -100%;
-    left: 5%;
-    margin: 0;
-    transition: all ease-in-out 0.2s;
-    border: 1px solid white;
-    display: flex;
-    opacity: 0;
-    z-index: 99;
-    &.open {
-      transform: translateY(140%);
-      opacity: 1;
-    }
-  }
+  ${mediaQuery(
+    "md",
+    `
+      position: fixed;
+      width: 90%;
+      height: 80vh;
+      background-color: ${rgba(lighten(0.1, colors.black), 0.98)};
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      top: -100%;
+      left: 5%;
+      margin: 0;
+      transition: all ease-in-out 0.2s;
+      border: 1px solid ${rgba(colors.white,.8)};
+      display: flex;
+      opacity: 0;
+      z-index: 99;
+      &.open {
+        transform: translateY(140%);
+        opacity: 1;
+      }
+    `
+  )}
 `;
 
 const isActive = (isCurrent, className) => {
@@ -46,7 +53,7 @@ const ListItemWrapper = ({ className, to, children }) => {
 };
 
 const LinkItem = styled(ListItemWrapper)`
-  color: #ddd;
+  color: ${colors.gray};
   font-weight: 500;
   coursor: pointer;
   transition: all ease-in-out 0.2s;
@@ -56,7 +63,7 @@ const LinkItem = styled(ListItemWrapper)`
     content: "";
     width: 0;
     height: 2px;
-    background-color: #1bb385;
+    background-color: ${lighten(0.2, colors.primary)};
     bottom: -4px;
     left: 0;
     position: absolute;
@@ -64,7 +71,7 @@ const LinkItem = styled(ListItemWrapper)`
   }
   &:hover,
   &.active {
-    color: #fff;
+    color: ${colors.white};
     &:after {
       width: 24px;
     }
@@ -72,8 +79,8 @@ const LinkItem = styled(ListItemWrapper)`
 `;
 
 const MenuIcon = styled.div`
-  background: #2c3644;
-  border: 1px solid #e7eefb;
+  background: ${colors.darkGray};
+  border: 1px solid ${colors.white};
   cursor: pointer;
   display: none;
   height: 48px;
@@ -85,16 +92,16 @@ const MenuIcon = styled.div`
   right: 16px;
   transition: all ease 0.3s;
   &:hover {
-    border-color: #66ebba;
+    border-color: ${lighten(0.2, colors.primary)};
   }
   &:hover div,
   &:hover div::before,
   &:hover div::after {
-    background: #66ebba;
+    background: ${lighten(0.2, colors.primary)};
   }
-  @media (max-width: 768px) {
+  ${mediaQuery("md", css`
     display: block;
-  }
+  `)}
 `;
 
 const MenuItem = styled.div`
@@ -111,7 +118,7 @@ const MenuItem = styled.div`
   &,
   &::before,
   &::after {
-    background: #e7eefb;
+    background: ${colors.white};
     cursor: pointer;
     content: "";
     display: block;
@@ -141,8 +148,6 @@ const MenuComponent = (props) => {
       <List className={clsx(open && "open", !type && "nav")}>
         <LinkItem to="/">Início</LinkItem>
         <LinkItem to="/about/">Sobre</LinkItem>
-        {/* <LinkItem to="/curriculum/">Currículo</LinkItem>
-        <LinkItem to="/service/">Serviços</LinkItem> */}
         <LinkItem to="/portifolio/">Portfólio</LinkItem>
         <LinkItem to="/contact/">Contato</LinkItem>
       </List>
