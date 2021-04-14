@@ -103,9 +103,9 @@ const ImageHover = styled.div`
   background: ${rgba(darken(0.2, colors.darkGray), 0.98)};
   position: absolute;
   transition: all 0.4s ease-in-out;
-  transform: scale(0.9);
+  transform: ${(props) => (props.active ? "none" : "scale(0.9)")};
   z-index: 2;
-  opacity: 0;
+  opacity: ${(props) => (props.active ? 1 : 0)};
   line-height: 2;
   &:after {
     content: "";
@@ -247,9 +247,10 @@ const IconItem = styled(WrapIcon)`
 const ImageWrapper = ({ data, id }) => {
   const { title, live, github, category, featuredImage } = data;
   const image = getImage(featuredImage.childrenImageSharp[0]);
+  const [active, setActive] = useState(false);
   return (
     <ImageContainer>
-      <ImageHover>
+      <ImageHover active={active} onTouchStart={() => setActive(prev=>!prev)}>
         <h4>{title}</h4>
         <TagContainer>
           {category.map((cat, index) => (
@@ -315,34 +316,41 @@ const Portfolio = ({ data }) => {
       setDirections([true, compRight ? true : false]);
 
       if (compRight) {
-        for (let i = 0; i < 12; i ++) {
+        for (let i = 0; i < 12; i++) {
           setTimeout(() => {
             menuEl.current.scrollLeft += effectArea / 12;
-          }, i*16);
+          }, i * 16);
         }
       } else {
-        for (let i = 0; i < (ref.scrollLeftMax - ref.scrollLeft)/(effectArea/12); i++) {
+        for (
+          let i = 0;
+          i < (ref.scrollLeftMax - ref.scrollLeft) / (effectArea / 12);
+          i++
+        ) {
           setTimeout(() => {
-            if (menuEl.current.scrollLeft + effectArea / 12 < menuEl.current.scrollLeftMax) {
+            if (
+              menuEl.current.scrollLeft + effectArea / 12 <
+              menuEl.current.scrollLeftMax
+            ) {
               menuEl.current.scrollLeft += effectArea / 12;
             } else {
               menuEl.current.scrollLeft = menuEl.current.scrollLeftMax;
             }
-          }, i*16);
+          }, i * 16);
         }
       }
     } else {
       const compLeft = ref.scrollLeft - effectArea >= 0;
       setDirections([compLeft ? true : false, true]);
-      
+
       if (compLeft) {
-        for (let i = 0; i < 12; i ++) {
+        for (let i = 0; i < 12; i++) {
           setTimeout(() => {
             menuEl.current.scrollLeft -= effectArea / 12;
-          }, i*16);
+          }, i * 16);
         }
       } else {
-        for (let i = 0; i < (ref.scrollLeft / (effectArea / 12)); i++){
+        for (let i = 0; i < ref.scrollLeft / (effectArea / 12); i++) {
           setTimeout(() => {
             if (menuEl.current.scrollLeft - effectArea / 12 > 0) {
               menuEl.current.scrollLeft -= effectArea / 12;
